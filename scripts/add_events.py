@@ -1,5 +1,6 @@
 import boto3
 import datetime
+import uuid
 
 # Call user/event table from AWS
 
@@ -24,8 +25,9 @@ def add_event_to_table (name, host_id, location , description, photo , person_li
         if name == "" or location =="" or host_id == "":
             print("User not added")
             return False
-            
-            
+    
+    event_id = uuid.uuid4().urn
+   
     try:
         # Create transaction
         resp = dynamodb.transact_write_items(
@@ -36,7 +38,7 @@ def add_event_to_table (name, host_id, location , description, photo , person_li
                         "Item": {
 
                             "UID_User": {"S": host_id},
-                            "UID_Event/User": {"S": "1089"},
+                            "UID_Event/User": {"S": event_id},
                             "Name" : {"S": name},
                             "location": {"S": location},
                             "description" : {"S": description},
