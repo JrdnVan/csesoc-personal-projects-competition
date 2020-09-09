@@ -23,9 +23,10 @@ def add_event_to_table (name, host_id, location , description, photo , person_li
     
     if type(name) == str and type(location) and str and type(host_id) and str:
         if name == "" or location =="" or host_id == "":
-            print("User not added")
+            print("Event not added")
             return False
     
+    # generate randon event ID
     event_id = uuid.uuid4().urn
    
     try:
@@ -62,4 +63,3 @@ def add_event_to_table (name, host_id, location , description, photo , person_li
         print("Could not add event to database")
         
 
-add_event_to_table("neil", "1009", "location", "ff", "phy", "0" , "6",  "7" )
