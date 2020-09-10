@@ -71,7 +71,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
                             "radius": {"N": radius},
                             # Attain time event it made
                             "time_stamp" : {"S" : time},
-                            
+
                         },
                         "ConditionExpression": "attribute_not_exists(UID_User)",
                         "ReturnValuesOnConditionCheckFailure": "ALL_OLD",
@@ -85,4 +85,3 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
         print("Could not add event to database")
         
 
-add_event_to_table("neil", "1001", "location", "Desc", "phy", "" , "",  "1" , "")
