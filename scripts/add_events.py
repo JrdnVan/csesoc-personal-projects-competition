@@ -1,10 +1,23 @@
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 import datetime
 import uuid
+import boto3
+import datetime
+import uuid
+from decouple import Config, RepositoryEnv
+
+DOTENV_PATH = ".env"
+env = Config(RepositoryEnv(DOTENV_PATH))
 
 # Call user/event table from AWS
-
-dynamodb = boto3.client ("dynamodb")
+session = boto3.Session(
+    aws_access_key_id=env.get('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=env.get('AWS_SECRET_ACCESS_KEY'),
+)
+s3 = session.client('s3')
+dynamodb = session.resource('dynamodb', region_name='us-east-2')
+meet_ball_user = dynamodb.Table('meet_ball_user')
 
 
 # Note compulsory attributes name, host_id, location 
@@ -16,11 +29,6 @@ dynamodb = boto3.client ("dynamodb")
 
 # If creating new event attributes can be empty
 # if person_limit, time_limit and radius are empty enter default values
-
-
-
-
-
 
 def add_event_to_table (name, host_id, location , description, photo ,time,  person_limit, time_limit, radius):
     
@@ -38,9 +46,9 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
    # set default values if no provided values
     if person_limit == "":
         person_limit = "10"
-        
 
-        
+    print(meet_ball_user.scan())
+
     if radius == "":
         radius = "100"
    
@@ -50,38 +58,30 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
     print(time_limit)
     # generate randon event ID
     event_id = uuid.uuid4().urn
-   
+
     try:
         # Create transaction
-        resp = dynamodb.transact_write_items(
-            TransactItems=[
-                {
-                    "Put": {
-                        "TableName": "meet_ball_user",
-                        "Item": {
-
-                            "UID_User": {"S": host_id},
-                            "UID_Event/User": {"S": event_id},
-                            "Name" : {"S": name},
-                            "location": {"S": location},
-                            "description" : {"S": description},
-                            "photo": {"S": photo},
-                            "person_limit" : {"N" : person_limit},
-                            "time_limit": {"N": time_limit},
-                            "radius": {"N": radius},
-                            # Attain time event it made
-                            "time_stamp" : {"S" : time},
-
-                        },
-                        "ConditionExpression": "attribute_not_exists(UID_User)",
-                        "ReturnValuesOnConditionCheckFailure": "ALL_OLD",
-                    }
-                }
-            ]
-        )
+        meet_ball_user.put_item(
+            Item = {
+                    "UID_User": host_id,
+                    "UID_Event/User": event_id,
+                    "Name" : name,
+                    "location": location,
+                    "description" : description,
+                    "photo": photo,
+                    "person_limit" :  person_limit,
+                    "time_limit": time_limit,
+                    "radius": radius,
+                    # Attain time event it made
+                    "time_stamp" :  time,
+            },
+            ConditionExpression = "attribute_not_exists(UID_User)",
+    )
         print("Event is now added")
         return True
     except Exception as e:
-        print("Could not add event to database")
+        print(e)
+        print("Could not adds event to database")
         
 
+add_event_to_table("jame", "123123123", "location", "Desc", "phy", "" , "",  "1" , "")
