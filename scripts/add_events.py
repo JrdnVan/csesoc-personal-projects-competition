@@ -55,7 +55,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
     if time_limit == "":
         time_limit = "30"
     
-    print(time_limit)
+   
     # generate randon event ID
     event_id = uuid.uuid4().urn
 
@@ -74,6 +74,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
                     "radius": radius,
                     # Attain time event it made
                     "time_stamp" :  time,
+                    "no_guest_attending" : 0,
             },
             ConditionExpression = "attribute_not_exists(UID_User)",
     )
