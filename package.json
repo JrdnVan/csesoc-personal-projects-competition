@@ -1,0 +1,26 @@
+{
+  "name": "csesoc-personal-projects-competition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase": "^7.19.1",
+    "firebase-admin": "^9.1.1",
+    "firebase-functions": "^3.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JrdnVan/csesoc-personal-projects-competition.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JrdnVan/csesoc-personal-projects-competition/issues"
+  },
+  "homepage": "https://github.com/JrdnVan/csesoc-personal-projects-competition#readme"
+}
