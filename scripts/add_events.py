@@ -30,10 +30,10 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 # If creating new event attributes can be empty
 # if person_limit, time_limit and radius are empty enter default values
 
-def add_event_to_table (name, host_id, location , description, photo ,time,  person_limit, time_limit, radius):
+def add_event_to_table (name, host_id, place , description, photo ,time,  person_limit, time_limit, radius):
     
-    if type(name) == str and type(location) == str and type(host_id) == str and type(time) == str:
-        if name == "" or location =="" or host_id == "":
+    if type(name) == str and type(place) == str and type(host_id) == str and type(time) == str:
+        if name == "" or place =="" or host_id == "":
             print("Event not added")
             return False
     
@@ -55,7 +55,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
     if time_limit == "":
         time_limit = "30"
     
-    print(time_limit)
+   
     # generate randon event ID
     event_id = uuid.uuid4().urn
 
@@ -65,8 +65,8 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
             Item = {
                     "UID_User": host_id,
                     "UID_Event/User": event_id,
-                    "Name" : name,
-                    "location": location,
+                    "full_name" : name,
+                    "place": place,
                     "description" : description,
                     "photo": photo,
                     "person_limit" :  person_limit,
@@ -74,6 +74,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
                     "radius": radius,
                     # Attain time event it made
                     "time_stamp" :  time,
+                    "no_guest_attending" : 0,
             },
             ConditionExpression = "attribute_not_exists(UID_User)",
     )
@@ -81,7 +82,7 @@ def add_event_to_table (name, host_id, location , description, photo ,time,  per
         return True
     except Exception as e:
         print(e)
-        print("Could not add event to database")
+        print("Could not adds event to database")
         
 
-add_event_to_table("jame", "123123123", "location", "Desc", "phy", "" , "",  "1" , "")
+add_event_to_table("neil", "1", "location", "Desc", "phy", "1" , "1",  "1" , "1")
