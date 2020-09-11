@@ -4,7 +4,8 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         height: 100,
-        backgroundColor: 'gray'
+        backgroundColor: 'white',
+
     },
     going_button: {
         width: 50,

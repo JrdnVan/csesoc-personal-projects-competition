@@ -2,8 +2,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Card, Avatar, Button, Divider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createStackNavigator } from '@react-navigation/stack';
-
 import { NavigationActions } from 'react-navigation';
 import { StackActions } from 'react-navigation';
 
@@ -19,7 +17,9 @@ class EventCard extends React.Component {
 
     render(){
         return(
-            <Card>
+            <View
+                style={styles.card}
+            >
                 <View
                     style={styles.flex_row}
                 >
@@ -30,7 +30,11 @@ class EventCard extends React.Component {
                         activeOpacity={0.7}
                         overlayContainerStyle={{backgroundColor: 'gray'}}
                         onPress={() => {
-                            this.props.navigation.navigate('signup');
+                            this.props.navigation.navigate('profile', {
+                                name: 'test data',
+                                last_active: 'test data',
+                                avatar_url: ''
+                            });
                         }}
                     />
                     <Divider
@@ -74,7 +78,7 @@ class EventCard extends React.Component {
                         type="clear"
                     />
                 </View>
-            </Card>
+            </View>
         );
 
     }

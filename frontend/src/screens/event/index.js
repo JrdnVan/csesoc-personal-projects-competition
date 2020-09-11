@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-class Signup extends React.Component {
+
+class Event extends React.Component {
     constructor(props){
         super(props);
     }
@@ -9,11 +10,11 @@ class Signup extends React.Component {
         return(
             <View>
                 <Text>
-                    signup
-
+                    event
                 </Text>
             </View>
         );
+
     }
 }
-export default Signup;
+export default Event;

@@ -1,9 +1,11 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import React from 'react';
 
 import Signup from '../../screens/signup'; 
 import Login from '../../screens/login';
 import BottomTab from '../main_bottom_tab';
+import ViewProfile from '../../screens/view_profile';
 
 import SCREEN_NAMES from './screen_names';
 
@@ -18,5 +20,6 @@ const StackNavigator = createStackNavigator({
         screen: Login
     },
 });
+
 
 export default createAppContainer(StackNavigator);
