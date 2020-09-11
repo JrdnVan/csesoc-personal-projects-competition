@@ -85,4 +85,3 @@ def add_event_to_table (name, host_id, place , description, photo ,time,  person
         print("Could not adds event to database")
         
 
-add_event_to_table("neil", "1", "location", "Desc", "phy", "1" , "1",  "1" , "1")

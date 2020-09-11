@@ -18,10 +18,11 @@ session = boto3.Session(
 s3 = session.client('s3')
 dynamodb = session.resource('dynamodb', region_name='us-east-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
-meet_ball_join = dynamodb.Table('meet_ball_join')
+meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
 # pass in host, event and guess ID 
+# have to check guest,hos,event are valid IDS
 
 def add_event_to_table (guest_id,  host_id , event_id ):
   
@@ -33,11 +34,6 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             print("Empty IDs")
             return False
 
-
-    # create transaction Id
-    transaction_id = uuid.uuid4().urn
-
-
     try:
         # Get event details 
         get_resp = meet_ball_user.get_item(
@@ -47,25 +43,20 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             }
         )
             
-        
         dict_resp = get_resp["Item"]
         limit = dict_resp["person_limit"]
         attending = dict_resp["no_guest_attending"]
 
         if int(attending) <= int(limit):
-            # process event guest transaction
-            print("ok")
-            # put Item and update previous table 
-
+  
+            #put Item and update previous table 
             #put Item
             meet_ball_join.put_item(
                 Item = {
-                        "UID": transaction_id,
-                        "Event": event_id,
-                        "Person": host_id,
-    
+                    "guest": guest_id,
+                    "event": event_id,
                 },
-                ConditionExpression = "attribute_not_exists(UID)",
+                ConditionExpression = "attribute_not_exists(guest_id)",
             )
 
             # Need to add checks to see if it works
@@ -82,11 +73,9 @@ def add_event_to_table (guest_id,  host_id , event_id ):
                 ReturnValues = "UPDATED_NEW",
             )
 
-            print("done")
-
     except Exception as e:
         print("Guest could not be added to event")
         return False
         
         
-add_event_to_table("1", "123123123", "urn:uuid:8c7e501a-63dc-4a41-8e0d-2913959a1291")
+add_event_to_table("7", "1", "urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc")
