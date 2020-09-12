@@ -1,11 +1,13 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import datetime
+
 import uuid
 import boto3
 import datetime
 import uuid
 from decouple import Config, RepositoryEnv
+
 
 #Note: When calling function provide all values, empty values = empty entries
 
@@ -22,9 +24,37 @@ dynamodb = session.resource('dynamodb', region_name='us-east-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
 
 
+
+# If place, description, person_limit, time_limit, radius are empty it would be replaced by old entries 
+
 def edit_event(host_id, event_id, place ,description, photo, person_limit, time_limit, radius):
     try:
-        print(meet_ball_user.scan())
+        if type(host_id) != str or type(event_id) != str:
+            print("Incorrect format")
+            return False
+
+        # Get original item
+        get_resp = meet_ball_user.get_item(
+            Key={
+            "UID_User": host_id,
+            "UID_Event/User" : event_id,
+            }
+        )
+        dict_resp = get_resp["Item"]
+
+        # Check for empty entries
+        if place == "":
+            place = dict_resp["place"]
+        if description == "":
+            description = dict_resp["description"]
+        if person_limit == "":
+            person_limit = dict_resp["person_limit"]
+        if time_limit == "":
+            time_limit = dict_resp["time_limit"]
+        if radius == "":
+            radius = dict_resp["radius"]
+
+
         meet_ball_user.update_item(
             Key={
                 "UID_User": host_id,
@@ -33,6 +63,7 @@ def edit_event(host_id, event_id, place ,description, photo, person_limit, time_
 
             # Update expressions
             UpdateExpression = "SET place = :place , description = :descp , photo = :photo , person_limit = :no_people , time_limit = :time_limit , radius = :radius",
+            ,ConditionExpression = ""
             ExpressionAttributeValues ={
                 ":place" : place,
                 ":descp": description,

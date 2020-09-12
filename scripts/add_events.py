@@ -24,9 +24,6 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 # Attributes without values will use default vaues
 
 
-# add_event_to_table("neil", "1001", "location", "Desc", "phy", "5" , "6",  "7" )
-
-
 # If creating new event attributes can be empty
 # if person_limit, time_limit and radius are empty enter default values
 
