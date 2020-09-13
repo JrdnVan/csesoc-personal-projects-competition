@@ -16,7 +16,7 @@ session = boto3.Session(
     aws_secret_access_key=env.get('AWS_SECRET_ACCESS_KEY'),
 )
 s3 = session.client('s3')
-dynamodb = session.resource('dynamodb', region_name='us-east-2')
+dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
 
 
@@ -60,3 +60,4 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
         print("Could not add user to database")
  
 
+#add_user_to_table("neil", "neil", "neil","neil", [], [],[],[],{})

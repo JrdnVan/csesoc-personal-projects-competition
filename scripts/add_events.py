@@ -16,7 +16,7 @@ session = boto3.Session(
     aws_secret_access_key=env.get('AWS_SECRET_ACCESS_KEY'),
 )
 s3 = session.client('s3')
-dynamodb = session.resource('dynamodb', region_name='us-east-2')
+dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
 
 
@@ -27,7 +27,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 # If creating new event attributes can be empty
 # if person_limit, time_limit and radius are empty enter default values
 
-def add_event_to_table (name, host_id, place , description, photo ,time,  person_limit, time_limit, radius):
+def add_event_to_table ( host_id,name,  place , description, photo ,time,  person_limit, time_limit, radius):
     
     if type(name) == str and type(place) == str and type(host_id) == str and type(time) == str:
         if name == "" or place =="" or host_id == "":
@@ -44,7 +44,7 @@ def add_event_to_table (name, host_id, place , description, photo ,time,  person
     if person_limit == "":
         person_limit = "10"
 
-    print(meet_ball_user.scan())
+
 
     if radius == "":
         radius = "100"
@@ -82,3 +82,4 @@ def add_event_to_table (name, host_id, place , description, photo ,time,  person
         print("Could not adds event to database")
         
 
+add_event_to_table("urn:uuid:8a272d73-2bd3-497e-acfe-6e2fa3152c72","event","place","desc","photo", "time", "4", "5","9")

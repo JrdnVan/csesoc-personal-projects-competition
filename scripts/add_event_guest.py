@@ -16,7 +16,7 @@ session = boto3.Session(
     aws_secret_access_key=env.get('AWS_SECRET_ACCESS_KEY'),
 )
 s3 = session.client('s3')
-dynamodb = session.resource('dynamodb', region_name='us-east-2')
+dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
 meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
@@ -35,6 +35,18 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             return False
 
     try:
+
+        # Check if guest exists in database
+        guest_resp = meet_ball_user.get_item(
+            Key={
+            "UID_User": guest_id,
+            "UID_Event/User" : guest_id,
+            }
+        )
+        if guest_resp["Item"] == NULL: print("Guest doesnt exist \n") 
+        
+
+        # Note Error would occur if guest (partition) and event(sort) arent unique preventing guest accepting multiple times 
         # Get event details 
         get_resp = meet_ball_user.get_item(
             Key={
@@ -60,7 +72,7 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             )
 
             # Need to add checks to see if it works
-            print("middle")
+           
             # Update number of people attending event 
             meet_ball_user.update_item(
                 Key={
@@ -72,10 +84,11 @@ def add_event_to_table (guest_id,  host_id , event_id ):
                 },
                 ReturnValues = "UPDATED_NEW",
             )
+            print("Relationship added")
 
     except Exception as e:
         print("Guest could not be added to event")
         return False
         
         
-add_event_to_table("7", "1", "urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc")
+add_event_to_table("7", "urn:uuid:8a272d73-2bd3-497e-acfe-6e2fa3152c72", "urn:uuid:e97c1509-c12f-436f-9cae-e6d264cce329")
