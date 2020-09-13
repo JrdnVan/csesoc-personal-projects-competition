@@ -1,7 +1,6 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import datetime
-
 import uuid
 import boto3
 import datetime
@@ -27,7 +26,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 
 # If place, description, person_limit, time_limit, radius are empty it would be replaced by old entries 
 
-def edit_event(host_id, event_id, place ,description, photo, person_limit, time_limit, radius):
+def edit_event(host_id, event_id, place ,description, person_limit, time_limit, radius):
     try:
         if type(host_id) != str or type(event_id) != str:
             print("Incorrect format")
@@ -62,12 +61,10 @@ def edit_event(host_id, event_id, place ,description, photo, person_limit, time_
             },
 
             # Update expressions
-            UpdateExpression = "SET place = :place , description = :descp , photo = :photo , person_limit = :no_people , time_limit = :time_limit , radius = :radius",
-            ,ConditionExpression = ""
+            UpdateExpression = "SET place = :place , description = :descp , person_limit = :no_people , time_limit = :time_limit , radius = :radius",
             ExpressionAttributeValues ={
                 ":place" : place,
                 ":descp": description,
-                ":photo": photo,
                 ":no_people": person_limit,
                 ":time_limit" : time_limit,
                 ":radius": radius,
@@ -82,4 +79,26 @@ def edit_event(host_id, event_id, place ,description, photo, person_limit, time_
         return False
 
 
-#edit_event("1", "urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc", "check", "check" , "check" , "check", "check", "check")
+def edit_event_photo(host_id, event_id, photo):
+    try:
+        if type(host_id) != str or type(event_id) != str or type(photo) != str:
+            print("Incorrect Format")
+            return False
+
+        meet_ball_user.update_item(
+            Key={
+                "UID_User": host_id,
+                "UID_Event/User" : event_id,
+            },UpdateExpression = "SET photo = :photo",
+            ExpressionAttributeValues ={
+                ":photo" : photo,
+            },
+            ReturnValues = "UPDATED_NEW",
+        )
+        print("Photo Updated")
+
+    except Exception as e:
+        print(e)
+        return False
+
+edit_event_photo("1", "	urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc", "pho")
