@@ -25,7 +25,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 
 # If name, email, password are empty replace with old entires
 
-def edit_user(user_id, name, email , password, pending, muted, blocked, friends, category):
+def edit_user(user_id, name, email , password):
 
     try:
         if type(user_id) != str:
@@ -36,9 +36,7 @@ def edit_user(user_id, name, email , password, pending, muted, blocked, friends,
             print("Not correct format")
             return False
 
-        if type(pending) != list or type(muted) != list or type(blocked) != list or type(friends) != list or type(category) != dict:
-            print("Not correct format")
-            return False
+
 
         # Get original user entry
         get_resp = meet_ball_user.get_item(
@@ -82,7 +80,6 @@ def edit_user(user_id, name, email , password, pending, muted, blocked, friends,
     except Exception as e:
         print(e)
         print("Can not edit user")
-#edit_user("urn:uuid:d27825a3-f93b-4090-853a-6c39cc6ca460", "str", "str","str", ["str", "str"], ["str", "str"], ["str", "str"],["str", "str"], {"str":"str"})
 
 def update_user_photo(user_id, photo):
     try:

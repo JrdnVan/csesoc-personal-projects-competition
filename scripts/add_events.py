@@ -74,7 +74,7 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
                     "no_guest_attending" : 0,
             },
             ConditionExpression = "attribute_not_exists(UID_User)",
-    )
+        )
         print("Event is now added")
         return True
     except Exception as e:

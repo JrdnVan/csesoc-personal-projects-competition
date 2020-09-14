@@ -54,7 +54,7 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             "UID_Event/User" : event_id,
             }
         )
-            
+             
         dict_resp = get_resp["Item"]
         limit = dict_resp["person_limit"]
         attending = dict_resp["no_guest_attending"]
@@ -91,4 +91,3 @@ def add_event_to_table (guest_id,  host_id , event_id ):
         return False
         
         
-add_event_to_table("7", "urn:uuid:8a272d73-2bd3-497e-acfe-6e2fa3152c72", "urn:uuid:e97c1509-c12f-436f-9cae-e6d264cce329")
