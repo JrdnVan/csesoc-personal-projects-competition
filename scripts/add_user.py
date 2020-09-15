@@ -71,4 +71,4 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
         print("Could not add user to database")
  
 
-add_user_to_table("neil", "neil1", "neil1","neil", ["1","2"], ["3"],[],[],{})
+add_user_to_table("neil", "neil9", "neil1","neil", ["1","2"], ["3"],[],[],[])

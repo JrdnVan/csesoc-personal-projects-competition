@@ -24,7 +24,7 @@ meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
 
-def update_list(user_id, pending, muted, blocked, friends):
+def update_list(user_id, pending, muted, blocked, friends, category_name, category):
 
     try:
         if type(user_id) != str:
@@ -43,14 +43,12 @@ def update_list(user_id, pending, muted, blocked, friends):
             }
         )
 
-        
         # Dictionary of attributes 
         dict_resp = get_resp_item["Item"]
         pend_list = dict_resp["pending"]
         muted_list = dict_resp["muted"]
         friend_list = dict_resp["friends"]
         block_list = dict_resp["blocked"]
-
 
         if check_duplicate(pend_list,pending) == True:
             meet_ball_user.update_item(
@@ -82,8 +80,19 @@ def update_list(user_id, pending, muted, blocked, friends):
                 UpdateExpression ="SET blocked = list_append( if_not_exists(blocked, :block), :block)",
                 ExpressionAttributeValues ={ ":block" : [blocked]},
                 ReturnValues = "UPDATED_NEW",
-            )    
-        
+            ) 
+
+
+        try:
+            category_list = dict_resp["category"][category_name] 
+                if check_duplicate(category_list, category == True:
+                    meet_ball_user.update_item(
+                    Key={"UID_User": user_id,"UID_Event/User" : user_id,},          
+                    UpdateExpression ="SET category = list_append( if_not_exists(category, :category), :category)",
+                    ExpressionAttributeValues ={ ":category" : [category]},
+                    ReturnValues = "UPDATED_NEW",
+                ) 
+
         return True 
         
     except Exception as e:
