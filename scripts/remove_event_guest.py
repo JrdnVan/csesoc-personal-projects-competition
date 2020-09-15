@@ -26,6 +26,9 @@ meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 def remove_event_from_table (guest_id, host_id, event_id ):
   
+
+
+    try:
     if type(guest_id) != str or type(event_id) != str:
         print("ID in wrong format")
         return False
@@ -33,8 +36,6 @@ def remove_event_from_table (guest_id, host_id, event_id ):
         if guest_id == "" or event_id == "":
             print("Empty IDs")
             return False
-
-    try:
                 
         meet_ball_join.delete_item(
             Key = {
@@ -61,4 +62,4 @@ def remove_event_from_table (guest_id, host_id, event_id ):
         print("Guest could not be removed from event")
         return False
         
-remove_event_from_table("1" , "1",'urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc')
+#remove_event_from_table("1" , "1",'urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc')

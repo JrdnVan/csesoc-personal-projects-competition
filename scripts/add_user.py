@@ -30,18 +30,29 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
     if type(name) == str and type(email) == str and type(password) == str:
         if name == "" or email =="" or password == "":
             print("User not added, Please check entries")
-            return False
+            raise ValueError
 
     # If entries arent empty generate UID
     user_id = event_id = uuid.uuid4().urn
 
     try:
-        # attempt to add items
+
+        # Check if email exist
+        get_resp_people = meet_ball_user.scan(
+            FilterExpression=Attr("email").eq(email) 
+        )
+
+        if get_resp_people["Count"] != 0:
+            raise ValueError 
+        
+
+        #attempt to add items
         meet_ball_user.put_item(
             Item = {
                 "UID_User": user_id,
                 "UID_Event/User": user_id,
                 "full_name": name,
+                "email" : email,
                 "password": password,
                 "photo": photo,
                 "pending": pending,
@@ -60,4 +71,4 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
         print("Could not add user to database")
  
 
-#add_user_to_table("neil", "neil", "neil","neil", [], [],[],[],{})
+add_user_to_table("neil", "neil1", "neil1","neil", ["1","2"], ["3"],[],[],{})

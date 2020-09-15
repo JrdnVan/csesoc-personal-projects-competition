@@ -1,5 +1,5 @@
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from decouple import Config, RepositoryEnv
 
 
@@ -14,7 +14,9 @@ session = boto3.Session(
 )
 s3 = session.client('s3')
 dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
-table = dynamodb.Table('meet_ball_user')
+meet_ball_user = dynamodb.Table('meet_ball_user')
+meet_ball_join = dynamodb.Table('meet_ball_join_table')
+
 
 
 # Requires Host and Event_id 
@@ -26,22 +28,33 @@ def delete_event (host_id, event_id):
             print("One of the UID is empty")
             return False
     
-    
     # Delete event from table 
     try:
-        table.delete_item(
+        meet_ball_user.delete_item(
             Key = {
                 "UID_User": host_id,
                 "UID_Event/User" : event_id,
             }
         )
-        print("Event is deleted!")
-        return True 
+
+    # Delete guess-event relationship
+    get_resp_event = meet_ball_join.scan(
+        FilterExpression=Attr("event").eq(event_id) 
+    )
+    event_dict =  get_resp_event["Items"]
+
+    for item in event_dict:
+        meet_ball_join.delete_item(
+            Key = {
+                "guest": item["guest"],
+                "event" : item["event"],
+            }
+        )
+    print("Event is deleted!")
+
         
     except Exception as e:
         print("Could not delete_event")
         return False
         
-        
     
-delete_event("123123123", "urn:uui:3108698e-e4dc-444f-b6d5-a47d61341d60")

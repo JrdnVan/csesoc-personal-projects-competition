@@ -19,21 +19,29 @@ meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
 def get_event_item(event_id):
-    event_dict = []
+    event_dict = {}
 
     #query using event_id
     try:
+        if type(event_id) != str:
+            raise TypeError 
+
         get_resp_event = meet_ball_user.scan(
             FilterExpression=Attr("UID_Event/User").eq(event_id) 
         )
-        event_dict = get_event_item
+        
+        event_dict =  get_resp_event["Items"]
+        
+        #event_dict = get_resp_event
     except Exception as e:
         print(e)
         print("can not query event")
-
+        
     # return dictionary of event if found
-    return event_dict
+    return event_dict    
 
+
+print(get_event_item("urn:uuid:7c3db440-671f-46d5-977e-d45c8bc66a1b")[0])
 
 def get_event_person_attending(event_id):
     person_list = []
@@ -57,4 +65,3 @@ def get_event_person_attending(event_id):
 
 
 #get_event_item("urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc")
-print(get_event_person_attending("10"))

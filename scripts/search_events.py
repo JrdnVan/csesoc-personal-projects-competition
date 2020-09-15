@@ -16,10 +16,14 @@ dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
 meet_ball_user = dynamodb.Table('meet_ball_user')
 meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
-# gets attributes of person
 
-def get_user_item(user_id):
+
+
+def search_event(user_id):
     try:
+
+        possible_event = []
+
         if type(user_id) != str:
             raise TypeError 
     
@@ -29,40 +33,26 @@ def get_user_item(user_id):
                 "UID_Event/User" : user_id,
             }
         )
-        # Dictionary of attributes    
+
         dict_resp = get_resp_item["Item"]
-        return dict_resp
+
+        # Get friends list
+        friend_list = dict_resp["friends"]
+    
+        for friend in friend_list:
+            get_friend_event = meet_ball_user.scan(
+                FilterExpression=Attr("UID_User").eq(friend) 
+            )
+    
+            friend_dict = get_friend_event["Items"][0]
+            friend_event = friend_dict["UID_Event/User"] 
+
+            if friend_event != friend:
+                possible_event.append(friend_event)
+
+        return possible_event
+
     except Exception as e:
         return e
 
-
-
-#Gets list of events person is attending
-
-def get_user_event(user_id):
-
-    list_of_event = []
-
-    try:
-        if type(user_id) != str:
-            raise TypeError 
-        # Query database for the user_id
-        get_resp_event = meet_ball_join.query(
-            KeyConditionExpression=Key("guest").eq(user_id)
-        )
-    
-        dict_resp = get_resp_event["Items"]
-        
-        # Add only event items into List
-        for item in dict_resp:
-            list_of_event.append(item["event"])
-
-        
-    # If fail return empty list
-    except Exception as e:
-        print(e)
-        
-    return list_of_event
-
-
-
+search_event("urn:uuid:ec8be737-dddd-4251-ac05-85bde3d49737")
