@@ -24,7 +24,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 
 
 
-def add_user_to_table (name, email , password, photo, pending, muted, blocked, friends, category):
+def add_user_to_table (name, email , password, photo):
 
     # Check if essential strings are empty 
     if type(name) == str and type(email) == str and type(password) == str:
@@ -35,6 +35,12 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
     # If entries arent empty generate UID
     user_id = event_id = uuid.uuid4().urn
 
+    category = {
+        "pending":[],
+        "muted":[],
+        "blocked":[],
+        "friends":[],
+    }
     try:
 
         # Check if email exist
@@ -55,10 +61,6 @@ def add_user_to_table (name, email , password, photo, pending, muted, blocked, f
                 "email" : email,
                 "password": password,
                 "photo": photo,
-                "pending": pending,
-                "muted" : muted,
-                "blocked": blocked,
-                "friends": friends,
                 "category": category,
             },
             ConditionExpression = "attribute_not_exists(UID_User)",

@@ -21,15 +21,17 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
-def remove_item(user_id, pending, muted, blocked, friends, category):
+def remove_item(user_id, category_name, category_id):
 
     try:
         if type(user_id) != str:
             print("User_id not correct format")
             return False
 
-        if type(pending) != str or type(muted) != str or type(blocked) != str or type(friends) != str:
+        if type(category_id) != str or type(category_name) != str:
             print("Not correct format")
+
+
 
         # get original object
         get_resp_item = meet_ball_user.get_item(
@@ -39,65 +41,38 @@ def remove_item(user_id, pending, muted, blocked, friends, category):
             }
         )
         dict_resp = get_resp_item["Item"]
-        pend_list = dict_resp["pending"]
-        muted_list = dict_resp["muted"]
-        friend_list = dict_resp["friends"]
-        block_list = dict_resp["blocked"]
+        category_dict = dict_resp["category"]
+        
+        if category_dict.get(category_name, -1) == -1:
+            return True
 
-        friend_index = search_list(friend_list,friends) 
-        if friend_index != -1:
-            meet_ball_user.update_item(
-                Key={"UID_User": user_id,"UID_Event/User" : user_id},          
-                UpdateExpression = "SET friends =:friend",
-                ExpressionAttributeValues ={ ":friend" : friend_index},
-                ReturnValues = "UPDATED_NEW",
-            )    
+        category_list = category_dict.get(category_name, -1)
 
-        pend_index = search_list(pend_list, pending)
-        if pend_index != -1:
-            meet_ball_user.update_item(
-                Key={"UID_User": user_id,"UID_Event/User" : user_id},          
-                UpdateExpression = "SET pending =:pend",
-                ExpressionAttributeValues ={ ":pend" : pend_index},
-                ReturnValues = "UPDATED_NEW",
-            )    
+ 
+        
+        try:
+            category_list.remove(category_id)
+        except Exception as e:
+            return "Category_id wasnt avaliable"
 
-        block_index = search_list(block_list, blocked)
-        if block_index != -1:
-            meet_ball_user.update_item(
-                Key={"UID_User": user_id,"UID_Event/User" : user_id},          
-                UpdateExpression = "SET blocked =:block",
-                ExpressionAttributeValues ={ ":block" : block_index},
-                ReturnValues = "UPDATED_NEW",
-            )     
 
-        mute_index = search_list(muted_list, muted)
-        if mute_index != -1:
-            meet_ball_user.update_item(
-                Key={"UID_User": user_id,"UID_Event/User" : user_id},          
-                UpdateExpression = "SET muted =:mute",
-                ExpressionAttributeValues ={ ":mute" : mute_index},
-                ReturnValues = "UPDATED_NEW",
-            )          
+        meet_ball_user.update_item(
+            Key={"UID_User": user_id,"UID_Event/User" : user_id},          
+            UpdateExpression ="SET category.#list_name = :category_list",
+            ExpressionAttributeNames ={"#list_name" : category_name },
+            ExpressionAttributeValues ={ ":category_list" : category_list},
+            ReturnValues = "UPDATED_NEW",
+        )     
 
         return True 
-
+        
 
     except Exception as e:
         print(e)
         return False 
 
 
-def search_list(list,UID):
-    if UID == None:
-        return -1
-
-    for item in list:
-        if item == UID:
-            list.remove(item)
-            return list
-        
-    return -1
 
 
-remove_item("urn:uuid:ec8be737-dddd-4251-ac05-85bde3d49737","5", "9", "10", "11", "7")
+
+remove_item("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3","bad", "4")

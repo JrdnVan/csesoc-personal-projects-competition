@@ -33,19 +33,20 @@ def add_categories(user_id, category_name):
     )
  
     item = get_resp_item["Item"]
-    category_list =  item["category"]
+    category_dict =  item["category"]
 
-    for item in category_list:
-        if item.key == category_name:
-            return False
+    
+    if category_dict.get(category_name, -1) != -1:
+        return True
 
-
+    
     meet_ball_user.update_item(
         Key={"UID_User": user_id,"UID_Event/User" : user_id,},          
-        UpdateExpression ="SET category = list_append( if_not_exists(category, :new_category), :new_category)",
-        ExpressionAttributeValues ={ ":new_category" : [{category_name:[]}] },
+        UpdateExpression ="SET category.#list_name = :category_value", 
+        ExpressionAttributeNames ={"#list_name" : category_name },
+        ExpressionAttributeValues ={ ":category_value" : []},
         ReturnValues = "UPDATED_NEW",
     )
+    
 
-
-add_categories("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3","fun")
+add_categories("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3","bad")

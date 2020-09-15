@@ -17,9 +17,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
-
-
-def search_event(user_id):
+def search_event(user_id, category_name):
     try:
 
         possible_event = []
@@ -35,24 +33,26 @@ def search_event(user_id):
         )
 
         dict_resp = get_resp_item["Item"]
+        category_dict = dict_resp["category"]
+        
+        if category_dict.get(category_name, -1) == -1:
+            return False
 
-        # Get friends list
-        friend_list = dict_resp["friends"]
+        category_list = category_dict.get(category_name, -1)
     
-        for friend in friend_list:
-            get_friend_event = meet_ball_user.scan(
-                FilterExpression=Attr("UID_User").eq(friend) 
+        for person in category_list:
+            get_person_event = meet_ball_user.scan(
+                FilterExpression=Attr("UID_User").eq(person) 
             )
-    
-            friend_dict = get_friend_event["Items"][0]
-            friend_event = friend_dict["UID_Event/User"] 
+            for person_entity in get_person_event["Items"]:
+                person_event = person_entity["UID_Event/User"] 
 
-            if friend_event != friend:
-                possible_event.append(friend_event)
+                if person_event != person:
+                    possible_event.append(person_event)
 
         return possible_event
 
     except Exception as e:
         return e
 
-search_event("urn:uuid:ec8be737-dddd-4251-ac05-85bde3d49737")
+print(search_event("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3", "bad"))
