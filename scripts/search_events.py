@@ -3,6 +3,10 @@ from boto3.dynamodb.conditions import Key, Attr
 import datetime
 from decouple import Config, RepositoryEnv
 
+from get_user import get_user_event
+
+
+
 DOTENV_PATH = ".env"
 env = Config(RepositoryEnv(DOTENV_PATH))
 
@@ -49,6 +53,10 @@ def search_event(user_id, category_name):
 
                 if person_event != person:
                     possible_event.append(person_event)
+
+        # remove events user is attending
+        for item in get_user_event(user_id):
+            possible_event.remove(item)
 
         return possible_event
 
