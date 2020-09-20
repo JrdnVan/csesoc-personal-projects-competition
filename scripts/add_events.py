@@ -4,6 +4,7 @@ import datetime
 import uuid
 import boto3
 import datetime
+from datetime import timedelta
 import uuid
 from decouple import Config, RepositoryEnv
 
@@ -34,11 +35,23 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
             print("Event not added")
             return False
     
+
+
+
     # use current time if no time is provided
     if time == "":
-        time = datetime.datetime.now().isoformat()
+        time_utc = datetime.datetime.now()
+        time = time_utc.strftime("%c")
+    else:
+        try:
+            time_utc = datetime.datetime.strptime(time, '%H:%M:%S %d-%m-%Y')
+            if time_utc > datetime.datetime.now():    
+                time = time_utc.strftime("%c")
+            else:
+                raise ValueError("Time has to be before current")
+        except Exception as e:
+           raise e 
    
- 
    
    # set default values if no provided values
     if person_limit == "":
@@ -50,12 +63,22 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
         radius = "100"
    
     if time_limit == "":
-        time_limit = "30"
+        time_limit = time_utc + datetime.timedelta(0,30,0) 
+        time_limit = time_limit.strftime("%c")
+    else:
+        hr = int(time_limit.get("hr") )
+        mins = int(time_limit.get("min") )
+
+        if hr > 0 and mins > 0:
+            time_limit = time_utc +  datetime.timedelta(hr, mins, 0) 
+            time_limit = time_limit.strftime("%c")
+        else:
+            raise ValueError
     
    
     # generate randon event ID
     event_id = uuid.uuid4().urn
-
+    
     try:
         # Create transaction
         meet_ball_user.put_item(
@@ -76,10 +99,17 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
             ConditionExpression = "attribute_not_exists(UID_User)",
         )
         print("Event is now added")
+        
         return True
+    
     except Exception as e:
         print(e)
         print("Could not adds event to database")
         
 
-add_event_to_table("urn:uuid:8a272d73-2bd3-497e-acfe-6e2fa3152c72","event","place","desc","photo", "time", "4", "5","9")
+add_event_to_table("urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb","event","place","desc","photo", "8:40:40 27-1-2021", "4", {"hr":"1", "min": "4"},"9")
+
+
+#time = datetime.datetime.now().isoformat()
+#print(time)
+

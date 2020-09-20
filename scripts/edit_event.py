@@ -26,7 +26,7 @@ meet_ball_user = dynamodb.Table('meet_ball_user')
 
 # If place, description, person_limit, time_limit, radius are empty it would be replaced by old entries 
 
-def edit_event(host_id, event_id, place ,description, person_limit, time_limit, radius):
+def edit_event(host_id, event_id, place ,description, person_limit, time,time_limit, radius):
     try:
         if type(host_id) != str or type(event_id) != str:
             print("Incorrect format")
@@ -42,17 +42,44 @@ def edit_event(host_id, event_id, place ,description, person_limit, time_limit, 
         dict_resp = get_resp["Item"]
 
         # Check for empty entries
+    # use current time if no time is provided
+        if time == "":
+            time_utc = datetime.datetime.now()
+            time = time_utc.strftime("%c")
+        else:
+            try:
+                time_utc = datetime.datetime.strptime(time, '%H:%M:%S %d-%m-%Y')
+                if time_utc > datetime.datetime.now():    
+                    time = time_utc.strftime("%c")
+                else:
+                    raise ValueError("Time has to be before current")
+            except Exception as e:
+            raise e 
+
+        if time_limit == "":
+            time_limit = time_utc + datetime.timedelta(0,30,0) 
+            time_limit = time_limit.strftime("%c")
+        else:
+            hr = int(time_limit.get("hr") )
+            mins = int(time_limit.get("min") )
+
+            if hr > 0 and mins > 0:
+                time_limit = time_utc +  datetime.timedelta(hr, mins, 0) 
+                time_limit = time_limit.strftime("%c")
+            else:
+                raise ValueError
+
+
+
+
         if place == "":
             place = dict_resp["place"]
         if description == "":
             description = dict_resp["description"]
         if person_limit == "":
             person_limit = dict_resp["person_limit"]
-        if time_limit == "":
-            time_limit = dict_resp["time_limit"]
         if radius == "":
             radius = dict_resp["radius"]
-
 
         meet_ball_user.update_item(
             Key={
@@ -60,12 +87,15 @@ def edit_event(host_id, event_id, place ,description, person_limit, time_limit, 
                 "UID_Event/User" : event_id,
             },
 
+
+
             # Update expressions
-            UpdateExpression = "SET place = :place , description = :descp , person_limit = :no_people , time_limit = :time_limit , radius = :radius",
+            UpdateExpression = "SET place = :place , description = :descp , person_limit = :no_people , time_limit = :time_limit , radius = :radius, time = :time",
             ExpressionAttributeValues ={
                 ":place" : place,
                 ":descp": description,
                 ":no_people": person_limit,
+                ":time": time, 
                 ":time_limit" : time_limit,
                 ":radius": radius,
             },

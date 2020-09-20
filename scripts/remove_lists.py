@@ -31,7 +31,8 @@ def remove_item(user_id, category_name, category_id):
         if type(category_id) != str or type(category_name) != str:
             print("Not correct format")
 
-
+        if category_name == "self":
+            return False
 
         # get original object
         get_resp_item = meet_ball_user.get_item(
@@ -75,4 +76,4 @@ def remove_item(user_id, category_name, category_id):
 
 
 
-remove_item("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3","bad", "4")
+#remove_item("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f","friends", "urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb")

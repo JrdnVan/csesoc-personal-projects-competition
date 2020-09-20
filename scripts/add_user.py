@@ -40,6 +40,8 @@ def add_user_to_table (name, email , password, photo):
         "muted":[],
         "blocked":[],
         "friends":[],
+        "sent_out" :[],
+        "self":[user_id]
     }
     try:
 
@@ -73,4 +75,4 @@ def add_user_to_table (name, email , password, photo):
         print("Could not add user to database")
  
 
-add_user_to_table("neil", "neil9", "neil1","neil", ["1","2"], ["3"],[],[],[])
+add_user_to_table("noslien", "noslien", "noslien","noslien")

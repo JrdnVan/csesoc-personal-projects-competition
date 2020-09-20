@@ -1,7 +1,8 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-import datetime
+from datetime import datetime
 from decouple import Config, RepositoryEnv
+import datetime as datetime1
 
 DOTENV_PATH = ".env"
 env = Config(RepositoryEnv(DOTENV_PATH))
@@ -30,7 +31,17 @@ def get_user_item(user_id):
             }
         )
         # Dictionary of attributes    
+
+
         dict_resp = get_resp_item["Item"]
+        category_dict = dict_resp["category"]
+        friend_list = category_dict["friends"]
+        block_list = category_dict["blocked"]
+
+        dict_resp["category"]["friends"] = list( set(friend_list) - set(block_list))
+        dict_resp.pop("password")
+        dict_resp.pop("email")
+
         return dict_resp
     except Exception as e:
         return e
@@ -38,6 +49,7 @@ def get_user_item(user_id):
 
 
 #Gets list of events person is attending
+# append dictionary
 
 def get_user_event(user_id):
 
@@ -54,10 +66,28 @@ def get_user_event(user_id):
         dict_resp = get_resp_event["Items"]
         
         # Add only event items into List
+        # Could get events here
         for item in dict_resp:
-            list_of_event.append(item["event"])
 
-        
+            #query for time
+            get_event_data = meet_ball_user.get_item(
+                Key={
+                    "UID_User": item["host_id"],
+                    "UID_Event/User" : item["event"],
+                }
+            )
+            
+
+            event_dict_resp = get_event_data["Item"]
+
+            try:
+                if datetime.strptime(event_dict_resp["time_limit"], "%c") >  datetime1.datetime.now():
+                    list_of_event.append(event_dict_resp)
+            except Exception as e:
+                print(e)
+      
+                
+
     # If fail return empty list
     except Exception as e:
         print(e)
@@ -65,4 +95,4 @@ def get_user_event(user_id):
     return list_of_event
 
 
-
+#sprint(get_user_event("urn:uuid:6080e716-6a17-40e3-9fee-33f336bbf7d7"))

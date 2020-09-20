@@ -18,10 +18,11 @@ meet_ball_join = dynamodb.Table('meet_ball_join_table')
 
 
 
-def search_user(name, email):
+def search_user(user_id, name, email):
     try:
-        possible_user = []
 
+        # Extract possible users 
+        possible_user = []
         if type(name) != str or type(email) != str:
             raise TypeError 
 
@@ -31,7 +32,7 @@ def search_user(name, email):
             email = []
     
         get_resp_event = meet_ball_user.scan(
-            FilterExpression=Attr("full_name").contains(name) | Attr("email").contains(email) 
+            FilterExpression=Attr("full_name").contains(name) | Attr("email").eq(email) 
 
         )
 
@@ -41,10 +42,29 @@ def search_user(name, email):
             possible_user.append(person["UID_User"])
 
 
+        # Get user from db 
+        get_resp_item = meet_ball_user.get_item(
+            Key={
+                "UID_User": user_id,
+                "UID_Event/User" : user_id,
+            }
+        )
+        # Dictionary of attributes    
+        dict_resp = get_resp_item["Item"]
+        category_dict = dict_resp["category"]
+        blocked = category_dict["blocked"]
+
+    
+        possible_user = list(set(possible_user) - set(blocked))
 
         return possible_user
+
+
+        #Make use of block or muted 
+
+
 
     except Exception as e:
         return e
 
-print(search_user("", ""))
+print(search_user("urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb", "neil", ""))

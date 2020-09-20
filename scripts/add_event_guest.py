@@ -43,7 +43,8 @@ def add_event_to_table (guest_id,  host_id , event_id ):
             "UID_Event/User" : guest_id,
             }
         )
-        if guest_resp["Item"] == NULL: print("Guest doesnt exist \n") 
+        if guest_resp["Item"] == None: 
+            print("Guest doesnt exist \n") 
         
 
         # Note Error would occur if guest (partition) and event(sort) arent unique preventing guest accepting multiple times 
@@ -67,6 +68,7 @@ def add_event_to_table (guest_id,  host_id , event_id ):
                 Item = {
                     "guest": guest_id,
                     "event": event_id,
+                    "host_id": host_id
                 },
                 ConditionExpression = "attribute_not_exists(guest_id)",
             )
@@ -88,6 +90,8 @@ def add_event_to_table (guest_id,  host_id , event_id ):
 
     except Exception as e:
         print("Guest could not be added to event")
+        print(e)
         return False
         
         
+add_event_to_table("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f", "urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb", "urn:uuid:442b2771-d8e5-48ff-a962-c8187a067dd3")

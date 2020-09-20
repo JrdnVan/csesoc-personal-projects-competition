@@ -49,4 +49,4 @@ def add_categories(user_id, category_name):
     )
     
 
-add_categories("urn:uuid:bac625b8-b6e1-4522-82e3-46c48e88bab3","bad")
+add_categories("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f","bad")
