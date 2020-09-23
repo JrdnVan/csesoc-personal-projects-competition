@@ -2,6 +2,7 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import datetime
 from decouple import Config, RepositoryEnv
+from get_user import get_user_item
 
 DOTENV_PATH = ".env"
 env = Config(RepositoryEnv(DOTENV_PATH))
@@ -31,17 +32,6 @@ def search_user(user_id, name, email):
         if email == "":
             email = []
     
-        get_resp_event = meet_ball_user.scan(
-            FilterExpression=Attr("full_name").contains(name) | Attr("email").eq(email) 
-
-        )
-
-        users = get_resp_event["Items"]
-
-        for person in users:
-            possible_user.append(person["UID_User"])
-
-
         # Get user from db 
         get_resp_item = meet_ball_user.get_item(
             Key={
@@ -54,15 +44,29 @@ def search_user(user_id, name, email):
         category_dict = dict_resp["category"]
         blocked = category_dict["blocked"]
 
-    
-        possible_user = list(set(possible_user) - set(blocked))
+
+        #scan table 
+        get_resp_event = meet_ball_user.scan(
+            FilterExpression=Attr("full_name").contains(name) | Attr("email").eq(email) 
+
+        )
+
+        users = get_resp_event["Items"]
+
+        for person in users:
+            if person["UID_User"] in blocked:
+                print("")
+            else:
+                possible_user.append(get_user_item(person["UID_User"]))
+
+
 
         return possible_user
 
 
         #Make use of block or muted 
 
-
+#com
 
     except Exception as e:
         return e

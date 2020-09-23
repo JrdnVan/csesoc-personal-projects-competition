@@ -57,7 +57,7 @@ def friend_request(user_id, friend_id):
         curr_block_list = category_dict["blocked"]
 
         # Check user isnt in friend list 
-        if user_id in curr_friend_list or user_id in curr_pending_list or user_id in curr_block_list:
+        if user_id in curr_friend_list or user_id in curr_pending_list or user_id in curr_block_list or user_id in curr_sent_out_list:
             return False
 
         else:
@@ -86,5 +86,5 @@ def friend_request(user_id, friend_id):
         return False 
 
         
-
+#
 print(friend_request("urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb", "urn:uuid:82ac1135-95a1-4503-b660-1e645351205f"))

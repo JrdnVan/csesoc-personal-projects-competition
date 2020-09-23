@@ -93,5 +93,5 @@ def add_event_to_table (guest_id,  host_id , event_id ):
         print(e)
         return False
         
-        
+#
 add_event_to_table("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f", "urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb", "urn:uuid:442b2771-d8e5-48ff-a962-c8187a067dd3")

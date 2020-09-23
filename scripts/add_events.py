@@ -34,9 +34,12 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
         if name == "" or place =="" or host_id == "":
             print("Event not added")
             return False
-    
 
-
+        try:
+            int(radius)
+            int(person_limit)
+        except Exception as e:
+            raise e
 
     # use current time if no time is provided
     if time == "":
@@ -66,6 +69,8 @@ def add_event_to_table ( host_id,name,  place , description, photo ,time,  perso
         time_limit = time_utc + datetime.timedelta(0,30,0) 
         time_limit = time_limit.strftime("%c")
     else:
+        if type(time_limit) != dict:
+            raise TypeError("Time limit is dictionary")
         hr = int(time_limit.get("hr") )
         mins = int(time_limit.get("min") )
 
@@ -113,3 +118,4 @@ add_event_to_table("urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb","event","plac
 #time = datetime.datetime.now().isoformat()
 #print(time)
 
+#comm

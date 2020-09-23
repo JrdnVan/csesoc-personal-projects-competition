@@ -54,12 +54,14 @@ def edit_event(host_id, event_id, place ,description, person_limit, time,time_li
                 else:
                     raise ValueError("Time has to be before current")
             except Exception as e:
-            raise e 
+                raise e 
 
         if time_limit == "":
             time_limit = time_utc + datetime.timedelta(0,30,0) 
             time_limit = time_limit.strftime("%c")
         else:
+            if type(time_limit) != dict:
+                raise TypeError("Time limit is dictionary")
             hr = int(time_limit.get("hr") )
             mins = int(time_limit.get("min") )
 

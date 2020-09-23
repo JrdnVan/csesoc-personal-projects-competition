@@ -41,6 +41,7 @@ def get_user_item(user_id):
         dict_resp["category"]["friends"] = list( set(friend_list) - set(block_list))
         dict_resp.pop("password")
         dict_resp.pop("email")
+        
 
         return dict_resp
     except Exception as e:
@@ -94,5 +95,5 @@ def get_user_event(user_id):
         
     return list_of_event
 
-
+#com
 #sprint(get_user_event("urn:uuid:6080e716-6a17-40e3-9fee-33f336bbf7d7"))

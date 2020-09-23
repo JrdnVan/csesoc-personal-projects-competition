@@ -73,6 +73,6 @@ def add_user_to_table (name, email , password, photo):
     except Exception as e:
         print(e)
         print("Could not add user to database")
- 
+ #comm
 
 add_user_to_table("noslien", "noslien", "noslien","noslien")

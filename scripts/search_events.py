@@ -4,6 +4,7 @@ import datetime as datetime1
 from decouple import Config, RepositoryEnv
 from datetime import datetime
 from get_user import get_user_event
+from get_event import get_event_item
 
 
 
@@ -66,28 +67,22 @@ def search_event(user_id, category_name):
                 person_event = person_entity["UID_Event/User"] 
                 person_id = person_entity["UID_User"]
         
-                if person_id in no_show:
+
+
+                if person_id in no_show or person_event in get_user_event(user_id): 
                     print("no show")
                 else:
                     try:
                         if datetime.strptime(person_entity["time_limit"], "%c") >  datetime1.datetime.now():
-                            possible_event.append(person_event)
+                            possible_event.append( get_event_item(person_event) )
                         
                     except Exception as e:
                         print(e)
                 
-        
-        # remove events user is attending
-        for item in get_user_event(user_id):
-            try:
-                possible_event.remove(item["UID_Event/User"])
-            except Exception as e:
-                print("")
-  
 
         return possible_event
 
     except Exception as e:
         return e
-
+#
 print(search_event("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f", "friends"))

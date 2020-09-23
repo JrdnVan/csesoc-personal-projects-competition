@@ -47,6 +47,6 @@ def add_categories(user_id, category_name):
         ExpressionAttributeValues ={ ":category_value" : []},
         ReturnValues = "UPDATED_NEW",
     )
-    
 
+#comm
 add_categories("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f","bad")

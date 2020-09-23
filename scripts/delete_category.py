@@ -28,7 +28,7 @@ def delete_category(user_id, category_name):
         if type(user_id) != str or type(category_name) != str:
             raise TypeError 
 
-        if category_name == "friends" or category_name == "pending" or category_name == "blocked" or category_name == "muted":
+        if category_name == "friends" or category_name == "pending" or category_name == "blocked" or category_name == "muted" or category_name == "self":
             raise ValueError
 
 

@@ -53,9 +53,6 @@ def accept_request(user_id, friend_id):
         sent_out_list = category_dict_friend["sent_out"]
         
 
-
-        
-
         if friend_id in pending_list:
             print(pending_list)
             pending_list.remove(friend_id)
@@ -93,11 +90,12 @@ def accept_request(user_id, friend_id):
                 ReturnValues = "UPDATED_NEW",
             )
      
-            
-            return True
+        else:
+            raise ValueError("User not in pending_list")
+           
 
     except Exception as e:
         print(e)
         return False 
-
+# acc
 accept_request("urn:uuid:82ac1135-95a1-4503-b660-1e645351205f", "urn:uuid:35039454-4d10-4bb6-ab5d-0da3c9f5cfcb")

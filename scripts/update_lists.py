@@ -65,11 +65,6 @@ def update_list(user_id, category_name, category_id):
         category_dict = dict_resp["category"]
         friends_list = category_dict["friends"]
 
-
-
-
-
-
         if category_name == "blocked":
 
             try:
@@ -123,7 +118,7 @@ def update_list(user_id, category_name, category_id):
                 return False
 
             # Adding friends to custom 
-            if category_id in category_dict("friends"):
+            if category_id in category_dict["friends"]:
                 category_list = category_dict.get(category_name)
                 # Place in category if it exists
                 if check_duplicate(category_list,category_id) == True:
@@ -199,13 +194,4 @@ def check_duplicate(list, UID):
 
 #update_list("urn:uuid:6080e716-6a17-40e3-9fee-33f336bbf7d7","bad", "4")
 
-
-def pop():
-
-    l = ['Alice', 'Bob', 'Charlie', 'Bob', 'Dave']
-
-    l.remove('A')
-    print(l)
-
-print(pop())
 

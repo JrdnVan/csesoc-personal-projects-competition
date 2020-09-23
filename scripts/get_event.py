@@ -41,7 +41,7 @@ def get_event_item(event_id):
     return event_dict    
 
 
-print(get_event_item("urn:uuid:7c3db440-671f-46d5-977e-d45c8bc66a1b")[0])
+#print(get_event_item("urn:uuid:7c3db440-671f-46d5-977e-d45c8bc66a1b")[0])
 
 def get_event_person_attending(event_id):
     person_list = []
@@ -63,5 +63,5 @@ def get_event_person_attending(event_id):
     return person_list
 
 
-
+#coo
 #get_event_item("urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc")

@@ -61,5 +61,5 @@ def remove_event_from_table (guest_id, host_id, event_id ):
     except Exception as e:
         print("Guest could not be removed from event")
         return False
-        
+#
 #remove_event_from_table("1" , "1",'urn:uuid:51661c2a-eb07-4b2a-9a0d-86c1eff0fbfc')
